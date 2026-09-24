@@ -21,7 +21,12 @@ func TestUnit_cleanInput(t *testing.T) {
 		actual := cleanInput(c.input)
 
 		if len(actual) != len(c.expected) {
-			t.Fatalf("expected length is %d but got %d, output: %q", len(c.expected), len(actual), actual)
+			t.Fatalf(
+				"expected length is %d but got %d, output: %q",
+				len(c.expected),
+				len(actual),
+				actual,
+			)
 		}
 
 		for i := range actual {
