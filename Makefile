@@ -5,7 +5,7 @@ run:
 build:
 	go build
 test:
-	go test -cover ./... | gotestfmt
+	go test -json -cover ./... | gotestfmt
 fmt:
 	golangci-lint fmt
 lint:
