@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/thuyencode/pokedexcli/internal/pokeapi"
+	"github.com/thuyencode/pokedexcli/internal/pokecache"
 )
 
 type cliCommand struct {
@@ -15,33 +17,37 @@ type cliCommand struct {
 }
 
 type cliConfig struct {
-	commands     map[string]cliCommand
-	locationArea *pokeapi.LocationArea
+	commands      map[string]cliCommand
+	locationAreas *pokeapi.LocationAreas
+	cache         *pokecache.Cache
 }
 
 func Repl() {
-	config := cliConfig{commands: map[string]cliCommand{
-		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-			callback:    commandExit,
+	config := cliConfig{
+		cache: pokecache.NewCache(10 * time.Second),
+		commands: map[string]cliCommand{
+			"exit": {
+				name:        "exit",
+				description: "Exit the Pokedex",
+				callback:    commandExit,
+			},
+			"help": {
+				name:        "help",
+				description: "Display a help message",
+				callback:    commandHelp,
+			},
+			"map": {
+				name:        "map",
+				description: "Display next location areas",
+				callback:    commandMap,
+			},
+			"mapb": {
+				name:        "mapb",
+				description: "Display previous location areas",
+				callback:    commandMapBack,
+			},
 		},
-		"help": {
-			name:        "help",
-			description: "Display a help message",
-			callback:    commandHelp,
-		},
-		"map": {
-			name:        "map",
-			description: "Display next location areas",
-			callback:    commandMap,
-		},
-		"mapb": {
-			name:        "mapb",
-			description: "Display previous location areas",
-			callback:    commandMapBack,
-		},
-	}}
+	}
 
 	scanner := bufio.NewScanner(os.Stdin)
 

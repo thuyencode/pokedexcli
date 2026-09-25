@@ -39,18 +39,18 @@ func commandMap(c *cliConfig) error {
 
 	var apiUrl string
 
-	if c.locationArea == nil || c.locationArea.Next == nil {
+	if c.locationAreas == nil || c.locationAreas.Next == nil {
 		apiUrl = pokeapi.DefaultLocationAreaApiUrl
 	} else {
-		apiUrl = *c.locationArea.Next
+		apiUrl = *c.locationAreas.Next
 	}
 
-	data, err := pokeapi.FetchLocationArea(apiUrl)
+	data, err := pokeapi.FetchLocationAreas(apiUrl, c.cache)
 	if err != nil {
 		return err
 	}
 
-	c.locationArea = &data
+	c.locationAreas = &data
 
 	for _, location := range data.Results {
 		fmt.Println(location.Name)
@@ -65,18 +65,18 @@ func commandMapBack(c *cliConfig) error {
 
 	var apiUrl string
 
-	if c.locationArea == nil || c.locationArea.Previous == nil {
+	if c.locationAreas == nil || c.locationAreas.Previous == nil {
 		apiUrl = pokeapi.DefaultLocationAreaApiUrl
 	} else {
-		apiUrl = *c.locationArea.Previous
+		apiUrl = *c.locationAreas.Previous
 	}
 
-	data, err := pokeapi.FetchLocationArea(apiUrl)
+	data, err := pokeapi.FetchLocationAreas(apiUrl, c.cache)
 	if err != nil {
 		return err
 	}
 
-	c.locationArea = &data
+	c.locationAreas = &data
 
 	for _, location := range data.Results {
 		fmt.Println(location.Name)

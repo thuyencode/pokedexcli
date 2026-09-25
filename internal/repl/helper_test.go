@@ -2,7 +2,7 @@ package repl
 
 import "testing"
 
-func TestUnit_cleanInput(t *testing.T) {
+func Test_cleanInput(t *testing.T) {
 	cases := []struct {
 		input    string
 		expected []string
