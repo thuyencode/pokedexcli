@@ -10,14 +10,14 @@ import (
 
 var ErrNoCommandRegistered = errors.New("no commands registered")
 
-func commandExit(_ *cliConfig) error {
+func commandExit(_ *cliConfig, _ ...string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 
 	return nil
 }
 
-func commandHelp(c *cliConfig) error {
+func commandHelp(c *cliConfig, _ ...string) error {
 	if len(c.commands) == 0 {
 		return ErrNoCommandRegistered
 	}
@@ -33,7 +33,7 @@ func commandHelp(c *cliConfig) error {
 	return nil
 }
 
-func commandMap(c *cliConfig) error {
+func commandMap(c *cliConfig, _ ...string) error {
 	fmt.Println("Fetching data...")
 	fmt.Println()
 
@@ -59,7 +59,7 @@ func commandMap(c *cliConfig) error {
 	return nil
 }
 
-func commandMapBack(c *cliConfig) error {
+func commandMapBack(c *cliConfig, _ ...string) error {
 	fmt.Println("Fetching data...")
 	fmt.Println()
 
@@ -80,6 +80,30 @@ func commandMapBack(c *cliConfig) error {
 
 	for _, location := range data.Results {
 		fmt.Println(location.Name)
+	}
+
+	return nil
+}
+
+func commandExplore(c *cliConfig, args ...string) error {
+	if len(args) == 0 {
+		return errors.New("not enough argument(s)")
+	}
+
+	city := args[0]
+	apiUrl := pokeapi.DefaultLocationAreaApiUrl + city
+
+	fmt.Printf("Exploring %s...\n", city)
+	fmt.Println()
+
+	data, err := pokeapi.FetchLocationArea(apiUrl, c.cache)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Found Pokémon:")
+	for _, e := range data.PokemonEncounters {
+		fmt.Printf("- %s\n", e.Pokemon.Name)
 	}
 
 	return nil

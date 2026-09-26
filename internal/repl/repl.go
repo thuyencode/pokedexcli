@@ -13,7 +13,7 @@ import (
 
 type cliCommand struct {
 	name, description string
-	callback          func(*cliConfig) error
+	callback          func(c *cliConfig, args ...string) error
 }
 
 type cliConfig struct {
@@ -46,6 +46,11 @@ func Repl() {
 				description: "Display previous location areas",
 				callback:    commandMapBack,
 			},
+			"explore": {
+				name:        "explore",
+				description: "List all the Pokémon in a location area",
+				callback:    commandExplore,
+			},
 		},
 	}
 
@@ -70,13 +75,15 @@ func Repl() {
 			continue
 		}
 
-		command, ok := config.commands[args[0]]
+		commandName := args[0]
+		rest := args[1:]
+		command, ok := config.commands[commandName]
 		if !ok {
 			fmt.Println("Unknown command")
 			continue
 		}
 
-		err := command.callback(&config)
+		err := command.callback(&config, rest...)
 		if err != nil {
 			fmt.Printf("Error executing %q command: %s\n", command.name, err.Error())
 		}
